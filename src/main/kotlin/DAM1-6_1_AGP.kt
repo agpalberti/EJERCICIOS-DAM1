@@ -31,6 +31,14 @@ class CocheAcuatico():Coche(){
 
 //Especificación
 
+//Superclase
+open class Comida(){
+    fun cocina(){}
+}
+
+//Subclases
+class Lasagna(){}
+class ChocoFrito(){}
 
 //Construcción
 
@@ -49,6 +57,16 @@ class Camion():Motor(){
 
 fun main() {
 
-    val coche:Coche = CocheAcuatico()
+    var trabajador:Trabajador = Guardia()
+    trabajador = Enfermero()
+
+    var coche:Coche = CocheAcuatico()
+    coche= CocheVolador()
+
+    var motor:Motor = Avion()
+    motor = Camion()
 
 }
+
+//Otra forma de implementarlo sería mediante una variable del supertipo.
+//Que comparten metodos y variables.
