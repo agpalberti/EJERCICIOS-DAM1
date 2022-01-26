@@ -10,16 +10,57 @@ internal fun i(tag: String, msg: String) {
 
 
 fun main() {
-    var portatil = "/home/edu/IdeaProjects/IESRA-DAM-Prog/ejercicios/src/main/kotlin/un5/eje5_4/Catalog.xml"
-    //var casa = "/home/usuario/Documentos/workspace/IdeaProjects/IESRA-DAM/ejercicios/src/main/kotlin/un5/eje5_4/Catalog.xml"
+    var portatil = "C:\\Users\\usuarioT\\IdeaProjects\\EJERCICIOS-DAM1\\src\\main\\kotlin\\DAM1-6_5_AGP\\Catalog.xml"
 
-    val gestorDeLibros = gestionLibros(CatalogoLibrosXML(portatil))
+    val gestorDeLibros = gestionLibros(CatalogoLibrosXML(portatil),BookManagementIU())
     gestorDeLibros.preguntarPorUnLibro()
     gestorDeLibros.mostrarInfoDeUnLibro()
 
 }
 
-class gestionLibrosIU {
+interface GestionLibrosIU{
+    fun preguntarPorID():String
+    fun mostrarInfoDeLibro(infoLibro:Map<String,Any>)
+    fun existenciaLibro(boolean: Boolean, idLibro: String)
+}
+
+class GestionLibrosIUES:GestionLibrosIU {
+    override fun preguntarPorID(): String {
+        println("Introduzca un ID: ")
+        return readln()
+    }
+
+    override fun mostrarInfoDeLibro(infoLibro:Map<String,Any>) {
+        if (infoLibro.isNotEmpty())
+            println("La información sobre el libro es la siguiente\n$infoLibro")
+        else
+            println("No se encontró información sobre el libro")
+    }
+
+    override fun existenciaLibro(boolean: Boolean, idLibro: String) {
+        if(boolean) println("El libro $idLibro existe!")
+        else println("El libro $idLibro NO existe!")
+    }
+
+}
+
+class BookManagementIU():GestionLibrosIU{
+    override fun preguntarPorID(): String {
+        println("Enter the ID: ")
+        return readln()
+    }
+
+    override fun mostrarInfoDeLibro(infoLibro: Map<String, Any>) {
+        if (infoLibro.isNotEmpty())
+            println("The information about the book is the following:\n$infoLibro")
+        else
+            println("There is no information about this book.")
+    }
+
+    override fun existenciaLibro(boolean: Boolean, idLibro: String) {
+        if(boolean) println("The book $idLibro exists!")
+        else println("The book $idLibro does not exist!")
+    }
 
 }
 
@@ -28,28 +69,22 @@ interface CatalogoLibros{
     fun infoLibro(idLibro: String):Map<String, Any>
 }
 
-class gestionLibros(catalogoLibros: CatalogoLibros)
+class gestionLibros(catalogoLibros: CatalogoLibros, gestionLibrosIU: GestionLibrosIU)
 {
     var cat:CatalogoLibros = catalogoLibros
+    val iu:GestionLibrosIU =  gestionLibrosIU
 
     fun preguntarPorUnLibro() {
-        println("Introduzca un ID: ")
-        var idLibro = readln()
-        if (cat.existeLibro(idLibro))
-            println("El libro $idLibro existe!")
-        else
-            println("El libro $idLibro NO existe!")
+
+        val idLibro = iu.preguntarPorID()
+        iu.existenciaLibro(cat.existeLibro(idLibro),idLibro)
     }
 
     fun mostrarInfoDeUnLibro()
     {
-        println("Introduzca un ID: ")
-        var idLibro = readln()
+        var idLibro = iu.preguntarPorID()
         var infoLibro = cat.infoLibro(idLibro)
-        if (!infoLibro.isEmpty())
-            println("La información sobre es la siguiente\n$infoLibro")
-        else
-            println("No se encontró información sobre el libro")
+        iu.mostrarInfoDeLibro(infoLibro)
     }
 
 }
